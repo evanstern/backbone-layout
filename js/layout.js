@@ -15,6 +15,7 @@
         this.id = _.uniqueId("managed_");
         this.view = view;
         this.anchor = options.anchor;
+        this.replace = options.replace;
     };
 
     // ViewManager
