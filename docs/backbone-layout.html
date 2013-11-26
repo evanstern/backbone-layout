@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>backbone-layout.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>backbone-layout.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Backbone-Layout.js 0.1.0</p>
+<p>(c) 2013 Evan Stern
+Backbone-Layout may be freely distributed under the MIT license.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span><span class="params">(root, factory)</span> {</span>
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> define === <span class="string">"function"</span> &amp;&amp; define.amd) {
+        define([<span class="string">"backbone"</span>], factory);
+    } <span class="keyword">else</span> {
+        root.BackboneLayout = root.Backbone.Layout = factory();
+    }
+}(<span class="keyword">this</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="managedview">ManagedView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>A managed view is simply a wrapper around a <code>Backbone.View</code>. It stores
+meta information about the view so that it can be appropriately managed
+by the <code>ViewManager</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> ManagedView = <span class="function"><span class="keyword">function</span> <span class="title">ManagedView</span><span class="params">(view, options)</span> {</span>
+        options || (options = {});
+        <span class="keyword">this</span>.id = _.uniqueId(<span class="string">"managed_"</span>);
+        <span class="keyword">this</span>.view = view;
+        <span class="keyword">this</span>.anchor = options.anchor;
+        <span class="keyword">this</span>.replace = options.replace;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h2 id="viewmanager">ViewManager</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>The view manager keeps track of the views that have been registered with
+a BackboneLayout. It is the interface to those views.</p>
+<p>Views that are in the view manager will have their events bubbled up to
+the parent view, they will be rendered when the parent is rendered and
+closed when the parent is closed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> ViewManager = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+        <span class="keyword">var</span> views = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h1 id="register">register</h1>
+<p>Register a view with the view manager.  This begins the management
+of the view.</p>
+<p>Available options:</p>
+<ul>
+<li><p>anchor</p>
+<p>  A jQuery selector string specifying the anchor element for the
+  view relative to the parent view. (i.e. where the view will be
+  rendered)</p>
+</li>
+<li><p>replace</p>
+<p>  A boolean flag specifying whether or not to replace the anchor
+  with the view&#39;s element.
+  Defaults to <code>false</code></p>
+</li>
+</ul>
+<p>If no anchor is given, the view will be managed as normal but the
+view&#39;s element will not be added to the DOM.</p>
+<p>Examples:</p>
+<pre><code>// The view will be appended to $(&quot;.container&quot;, this.el)
+this.registerView(view, {anchor: &quot;.container&quot;})
+
+// The view will replace $(&quot;.container&quot;, this.el)
+this.registerView(view, {anchor: &quot;.container&quot;, replace: true});
+
+// The view will be registered but not added to the DOM
+this.registerView(view);</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.register = <span class="function"><span class="keyword">function</span><span class="params">(view, options)</span> {</span>
+            options || (options = {});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Bubble up all the events from this view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.listenTo(view, <span class="string">"all"</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">this</span>.trigger.apply(<span class="keyword">this</span>, arguments);
+            }, <span class="keyword">this</span>);
+
+            <span class="keyword">var</span> mView = <span class="keyword">new</span> ManagedView(view, options);
+            views.push(mView);
+        };
+
+        <span class="keyword">this</span>.each = <span class="function"><span class="keyword">function</span><span class="params">(iterator, context)</span> {</span>
+            _.each(<span class="keyword">this</span>.getViews(), iterator, context);
+        };
+
+        <span class="keyword">this</span>.getViews = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+            <span class="keyword">return</span> views;
+        };
+
+        _.bindAll(<span class="keyword">this</span>, <span class="string">"register"</span>, <span class="string">"each"</span>);
+    };
+    _.extend(ViewManager.prototype, Backbone.Events);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h2 id="backbonelayout">BackboneLayout</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>When extending BackboneLayout there are a few interface methods that can
+optionally be defined.</p>
+<ul>
+<li><code>beforeRender</code><blockquote>
+<p>This is the first function that is run during the <code>render()</code> call.</p>
+</blockquote>
+</li>
+<li><code>afterRender</code><blockquote>
+<p>This is the last function that is run during the <code>render()</code> call.</p>
+</blockquote>
+</li>
+</ul>
+<p>Examples:</p>
+<pre><code>var MyLayout = BackboneLayout.extend({
+  beforeRender: function() {
+    // executed before rendering itself or its children
+  }
+
+  , afterRender: function() {
+    // executed after rednering itself and its children
+  }
+});</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> BackboneLayout = Backbone.View.extend({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h1 id="constructor">constructor</h1>
+<p>Pre-processing to make sure the BackboneLayout has all the data and
+attributes we expect it to have.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        constructor: <span class="function"><span class="keyword">function</span><span class="params">(options)</span> {</span>
+            options || (options = {});
+            <span class="keyword">this</span>.viewManager = <span class="keyword">new</span> ViewManager();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Process <code>defaults</code> similarly to <code>Backbone.Model</code></p>
+<pre><code>var MyLayout = BackboneLayout.extend({
+  defaults: {
+    &#39;foo&#39;: &#39;bar&#39;
+  }
+});
+
+var layout = new MyLayout();
+layout.options.foo
+&gt;&gt; &#39;bar&#39;</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (<span class="keyword">this</span>.defaults) {
+                _.defaults(options, _.result(<span class="keyword">this</span>, <span class="string">"defaults"</span>));
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Serialize can be overridden via the options</p>
+<pre><code>var layout = new BackboneLayout({
+  serialize: function() {
+    return {&quot;foo&quot;: &quot;bar&quot;};
+  }
+});
+
+layout.serialize();
+&gt;&gt; {&quot;foo&quot;: &quot;bar&quot;}</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">if</span> (options.serialize) {
+                <span class="keyword">this</span>.serialize = options.serialize;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Restore pre Backbone 1.1.0 <code>this.options</code> functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.options = options;
+
+            Backbone.View.prototype.constructor.call(<span class="keyword">this</span>, options);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h1 id="initialize">initialize</h1>
+<p>When initializing a <code>BackboneLayout</code> it is good practice to define
+any nested views so that they can be rendered as soon as this view
+is rendered.</p>
+<p>Example:</p>
+<pre><code>var MyLayout = BackboneLayout.extend({
+  initialize: function(options) {
+    BackboneLayout.prototype.initialize.call(this, options);
+
+    this.registerView(new NestedView(), {
+      anchor: &quot;.nested-view&quot;
+      , replace: true
+    });
+  }
+});</code></pre>
+<p>See <code>ViewManager</code> and <code>BackboneLayout.render</code> for more details on
+how nested views are rendered.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        , initialize: <span class="function"><span class="keyword">function</span><span class="params">(options)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Bubble up anything the view manager triggers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.viewManager, <span class="string">"all"</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+                <span class="keyword">this</span>.trigger.apply(<span class="keyword">this</span>, arguments);
+            }, <span class="keyword">this</span>);
+            Backbone.View.prototype.initialize.call(<span class="keyword">this</span>, options);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h1 id="registerview">registerView</h1>
+<p>Register a view with the <code>ViewManager</code>. This will specify an
+explicit parent-child relationship between this view and the view
+added.</p>
+<p>See <code>ViewManager.register</code> for more information.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        , registerView: <span class="function"><span class="keyword">function</span><span class="params">(view, options)</span> {</span>
+            options || (options = {});
+            <span class="keyword">this</span>.viewManager.register(view, options);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h1 id="render">render</h1>
+<p>Render this view and all child views registered with thie view
+manager.</p>
+<p>The order of operations is:</p>
+<p>1) Call <code>beforeRender</code>
+2) Add this view to the DOM (if we can)
+3) Recurse through all nested views and render them
+4) Call <code>afterRender</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        , render: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+            <span class="keyword">this</span>.beforeRender &amp;&amp; <span class="keyword">this</span>.beforeRender();
+
+            <span class="keyword">if</span> (<span class="keyword">this</span>.template) {
+                <span class="keyword">this</span>.$el.empty().append(<span class="keyword">this</span>.template(<span class="keyword">this</span>.serialize()));
+            }
+
+            <span class="keyword">this</span>.viewManager.each(<span class="function"><span class="keyword">function</span><span class="params">(managed, index, list)</span> {</span>
+                <span class="keyword">var</span> view = managed.view;
+                view.render();
+                <span class="keyword">if</span> (managed.anchor) {
+                    <span class="keyword">var</span> anchor = $(managed.anchor, <span class="keyword">this</span>.el);
+                    <span class="keyword">if</span> (managed.replace) {
+                        anchor.replaceWith(view.el);
+                    } <span class="keyword">else</span> {
+                        anchor.html(view.el);
+                    }
+                }
+            }, <span class="keyword">this</span>);
+
+            <span class="keyword">this</span>.afterRender &amp;&amp; <span class="keyword">this</span>.afterRender();
+            <span class="keyword">return</span> <span class="keyword">this</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h1 id="close">close</h1>
+<p>Before closing this view, close all the child views. This prevents
+those views from becoming orphaned and prevents zombie binds from
+persisting.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        , close: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+            <span class="keyword">this</span>.viewManager.each(<span class="function"><span class="keyword">function</span><span class="params">(managed, index, list)</span> {</span>
+                view = managed.view;
+                view.close &amp;&amp; view.close();
+            });
+
+            <span class="keyword">this</span>.trigger(<span class="string">"close"</span>, <span class="keyword">this</span>);
+
+            <span class="keyword">this</span>.unbind();
+            <span class="keyword">this</span>.stopListening();
+            <span class="keyword">this</span>.remove();
+
+            <span class="keyword">this</span>.onClose &amp;&amp; <span class="keyword">this</span>.onClose();
+
+            <span class="keyword">return</span> <span class="keyword">this</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h1 id="serialize">serialize</h1>
+<p>Returns an object of data. This becomes the template context object.
+It is common practice to re-define this method as needed.</p>
+<p>Can be overridden via the <code>options</code> argument at instantiation time
+(see <code>BackboneLayout.initialize</code>)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        , serialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+            <span class="keyword">return</span> <span class="keyword">this</span>.model ? <span class="keyword">this</span>.model.toJSON() : {};
+        }
+    });
+
+    <span class="keyword">return</span> BackboneLayout;
+}));</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

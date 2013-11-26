@@ -60,11 +60,20 @@ module.exports = function(grunt) {
                 }
             }
         }
+        , docco: {
+            build: {
+                src: ["js/<%= pkg.name %>.js"]
+                , options: {
+                    output: "docs/"
+                }
+            }
+        }
     });
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
-    grunt.registerTask("default", ["jshint", "uglify"]);
+    grunt.loadNpmTasks("grunt-docco");
+    grunt.registerTask("default", ["jshint", "uglify", "docco"]);
 
     grunt.loadNpmTasks("grunt-contrib-jasmine");
     grunt.registerTask("test", ["jasmine"]);
