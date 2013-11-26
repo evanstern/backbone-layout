@@ -143,6 +143,29 @@ this.registerView(someView);
 // The view is now managed but will need to be manually rendered
 ```
 
+Contributing
+------------
+
+To contribute, just fork the repo and submit pull requests. Please make sure to run the tests (see below) and use the same style as the rest of the codebase.
+
+Getting started with a development environment is as simple as running `npm install` from the project directory.
+
+### Building and Testing
+
+Everything can be run through `GruntJS`.
+
+```bash
+# Run jshint and minification
+$ grunt
+
+# Run tests
+$ grunt test
+```
+
+
+
+
+
 
 
 
