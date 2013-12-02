@@ -150,7 +150,7 @@
         });
     });
 
-    describe("Simpple renderer", function() {
+    describe("Simple renderer", function() {
         var Layout,
             layout,
             beforeRender,
@@ -235,6 +235,14 @@
             layout.registerView(view1, {anchor: ".view1", replace: true});
             layout.render();
             expect(view1.el.parentNode).toBe(layout.el);
+        });
+
+        it("listens to its children", function() {
+            layout.registerView(view1);
+            listener = jasmine.createSpy("listener");
+            layout.on("test", listener);
+            view1.trigger("test");
+            expect(listener).toHaveBeenCalled();
         });
     });
 
