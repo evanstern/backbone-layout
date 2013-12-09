@@ -7,7 +7,7 @@
     if (typeof define === "function" && define.amd) {
         define(["backbone"], factory);
     } else {
-        root.BackboneLayout = root.Backbone.Layout = factory();
+        root.BackboneLayout = factory();
     }
 }(this, function() {
 
