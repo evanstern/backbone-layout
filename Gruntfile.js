@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+    "use strict";
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json")
@@ -15,13 +16,20 @@ module.exports = function(grunt) {
                 }
             }
         }
+        , copy: {
+            build: {
+                files: [
+                    {src: "<%= pkg.name %>.js", dest: ".", cwd: "js/", expand: true}
+                ]
+            }
+        }
         , uglify: {
             options: {
-                sourceMap: "dist/<%= pkg.name %>.map.js"
+                sourceMap: "<%= pkg.name %>.map.js"
             }
             , build: {
                 src: "js/<%= pkg.name %>.js"
-                , dest: "dist/<%= pkg.name %>.min.js"
+                , dest: "<%= pkg.name %>.min.js"
             }
         }
         , jasmine: {
@@ -72,8 +80,9 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-docco");
-    grunt.registerTask("default", ["jshint", "uglify", "docco"]);
+    grunt.registerTask("default", ["jshint", "copy", "uglify", "docco"]);
 
     grunt.loadNpmTasks("grunt-contrib-jasmine");
     grunt.registerTask("test", ["jasmine"]);

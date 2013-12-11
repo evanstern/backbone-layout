@@ -1,0 +1,20 @@
+{
+  "name": "backbone-layout",
+  "version": "0.1.2",
+  "main": "backbone-layout.js",
+  "ignore": [
+    "js",
+    "test",
+    "node_modules",
+    "Gruntfile.js",
+    "**/.*",
+    "**/*.json",
+    "**/*.html"
+  ],
+  "dependencies": {
+    "backbone": "~1.1.0",
+    "underscore": "~1.5.2",
+    "jquery": "~2.0.2"
+  }
+}
+
