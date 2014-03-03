@@ -50,7 +50,7 @@
     // A mapping of models to their views
     var viewsByModel = {};
 
-    // # register
+    // ##register
     //
     // Register a view with the view manager.  This begins the management
     // of the view.
@@ -102,7 +102,7 @@
       }
     };
 
-    // # unRegister
+    // ##unRegister
     //
     // Un-register the specified view.
     //
@@ -131,21 +131,21 @@
       this.stopListening(view);
     };
 
-    // # each
+    // ##each
     //
     // Implementation of `_.each`.
     this.each = function(iterator, context) {
       _.each(this.getViews(), iterator, context);
     };
 
-    // # getViews
+    // ##getViews
     //
     // Get the managed views stored in `views`.
     this.getViews = function() {
       return views;
     };
 
-    // # getViewsByModel
+    // ##getViewsByModel
     //
     // Get the managed views that are associated with a specific model.
     this.getViewsByModel = function(model) {
@@ -182,7 +182,7 @@
   //
   var BackboneLayout = Backbone.View.extend({
 
-    // # constructor
+    // ##constructor
     //
     // Pre-processing to make sure the BackboneLayout has all the data and
     // attributes we expect it to have.
@@ -228,7 +228,7 @@
       Backbone.View.prototype.constructor.call(this, options);
     }
 
-    // # initialize
+    // ##initialize
     //
     // When initializing a `BackboneLayout` it is good practice to define
     // any nested views so that they can be rendered as soon as this view
@@ -262,7 +262,7 @@
       Backbone.View.prototype.initialize.call(this, options);
     }
 
-    // # registerView
+    // ##registerView
     //
     // Register a view with the `ViewManager`. This will specify an
     // explicit parent-child relationship between this view and the view
@@ -275,7 +275,7 @@
       this.viewManager.register(view, options);
     }
 
-    // # unRegisterView
+    // ##unRegisterView
     //
     // Unregisters the view with the `ViewManager`.
     //
@@ -283,7 +283,7 @@
       this.viewManager.unRegister(view);
     }
 
-    // # render
+    // ##render
     //
     // Render this view and all child views registered with thie view
     // manager.
@@ -319,7 +319,7 @@
       return this;
     }
 
-    // # close
+    // ##close
     //
     // Before closing this view, close all the child views. This prevents
     // those views from becoming orphaned and prevents zombie binds from
@@ -357,7 +357,7 @@
       return this;
     }
 
-    // # serialize
+    // ##serialize
     //
     // Returns an object of data. This becomes the template context object.
     // It is common practice to re-define this method as needed.
