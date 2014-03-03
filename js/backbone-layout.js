@@ -3,16 +3,19 @@
 // (c) 2013 Evan Stern
 // Backbone-Layout may be freely distributed under the MIT license.
 
+/* global define, _ */
 (function(root, factory) {
   'use strict';
 
   if (typeof define === 'function' && define.amd) {
-    define(['backbone'], factory);
+    define(['backbone', 'underscore'], factory);
   } else {
-    root.BackboneLayout = factory();
+    root.BackboneLayout = factory(root.Backbone, root._);
   }
-}(this, function() {
+}(this, function(Backbone, _) {
   'use strict';
+
+  var $ = Backbone.$;
 
   // ManagedView
   // -----------
@@ -257,7 +260,7 @@
     //
     , close: function() {
       this.viewManager.each(function(managed, index, list) {
-        view = managed.view;
+        var view = managed.view;
         view.close && view.close();
       });
 

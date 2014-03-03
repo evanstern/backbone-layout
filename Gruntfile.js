@@ -1,3 +1,4 @@
+/* jshint camelcase:false */
 module.exports = function(grunt) {
     "use strict";
 
@@ -38,9 +39,9 @@ module.exports = function(grunt) {
                 , options: {
                     specs: "tests/*js"
                     , vendor: [
-                        "node_modules/jquery/tmp/jquery.js"
-                        , "node_modules/backbone/node_modules/underscore/underscore.js"
-                        , "node_modules/backbone/backbone.js"
+                        "bower_components/jquery/dist/jquery.js"
+                        , "bower_components/underscore/underscore.js"
+                        , "bower_components/backbone/backbone.js"
                     ]
                 }
             }
@@ -53,14 +54,17 @@ module.exports = function(grunt) {
                         requireConfig: {
                             baseUrl: "js/"
                             , paths: {
-                                "backbone": "../node_modules/backbone/backbone"
-                                , "underscore": "../node_modules/backbone/node_modules/underscore/underscore"
-                                , "jquery": "../node_modules/jquery/tmp/jquery"
+                                "backbone": "../bower_components/backbone/backbone"
+                                , "underscore": "../bower_components/underscore/underscore"
+                                , "jquery": "../bower_components/jquery/dist/jquery"
                             }
                             , shim: {
                                 backbone: {
-                                    deps: ["underscore", "jquery"]
-                                    , exports: "Backbone"
+                                  deps: ["underscore", "jquery"]
+                                  , exports: "Backbone"
+                                },
+                                underscore: {
+                                  exports: '_'
                                 }
                             }
                         }

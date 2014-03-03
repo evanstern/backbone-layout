@@ -4,8 +4,7 @@
     } else {
         factory(root.BackboneLayout, Backbone);
     }
-}(this, function factory(BackboneLayout) {
-
+}(this, function(BackboneLayout) {
     describe("Ensure dependencies are loaded", function() {
         it("Backbone exists", function() {
             expect(window.Backbone).not.toBe(undefined);
