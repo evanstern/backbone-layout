@@ -4,12 +4,15 @@
 // Backbone-Layout may be freely distributed under the MIT license.
 
 (function(root, factory) {
-  if (typeof define === "function" && define.amd) {
-    define(["backbone"], factory);
+  'use strict';
+
+  if (typeof define === 'function' && define.amd) {
+    define(['backbone'], factory);
   } else {
     root.BackboneLayout = factory();
   }
 }(this, function() {
+  'use strict';
 
   // ManagedView
   // -----------
@@ -20,7 +23,7 @@
   //
   var ManagedView = function ManagedView(view, options) {
     options || (options = {});
-    this.id = _.uniqueId("managed_");
+    this.id = _.uniqueId('managed_');
     this.view = view;
     this.anchor = options.anchor;
     this.replace = options.replace;
@@ -63,11 +66,11 @@
     //
     // Examples:
     //
-    //     // The view will be appended to $(".container", this.el)
-    //     this.registerView(view, {anchor: ".container"})
+    //     // The view will be appended to $('.container', this.el)
+    //     this.registerView(view, {anchor: '.container'})
     //
-    //     // The view will replace $(".container", this.el)
-    //     this.registerView(view, {anchor: ".container", replace: true});
+    //     // The view will replace $('.container', this.el)
+    //     this.registerView(view, {anchor: '.container', replace: true});
     //
     //     // The view will be registered but not added to the DOM
     //     this.registerView(view);
@@ -76,7 +79,7 @@
       options || (options = {});
 
       // Bubble up all the events from this view.
-      this.listenTo(view, "all", function() {
+      this.listenTo(view, 'all', function() {
           this.trigger.apply(this, arguments);
       }, this);
 
@@ -92,7 +95,7 @@
       return views;
     };
 
-    _.bindAll(this, "register", "each");
+    _.bindAll(this, 'register', 'each');
   };
   _.extend(ViewManager.prototype, Backbone.Events);
 
@@ -143,19 +146,19 @@
       //     >> 'bar'
       //
       if (this.defaults) {
-        _.defaults(options, _.result(this, "defaults"));
+        _.defaults(options, _.result(this, 'defaults'));
       }
 
       // Serialize can be overridden via the options
       //
       //     var layout = new BackboneLayout({
       //       serialize: function() {
-      //         return {"foo": "bar"};
+      //         return {'foo': 'bar'};
       //       }
       //     });
       //
       //     layout.serialize();
-      //     >> {"foo": "bar"}
+      //     >> {'foo': 'bar'}
       //
       if (options.serialize) {
         this.serialize = options.serialize;
@@ -180,7 +183,7 @@
     //         BackboneLayout.prototype.initialize.call(this, options);
     //
     //         this.registerView(new NestedView(), {
-    //           anchor: ".nested-view"
+    //           anchor: '.nested-view'
     //           , replace: true
     //         });
     //       }
@@ -191,7 +194,7 @@
     //
     , initialize: function(options) {
       // Bubble up anything the view manager triggers
-      this.listenTo(this.viewManager, "all", function() {
+      this.listenTo(this.viewManager, 'all', function() {
         this.trigger.apply(this, arguments);
       }, this);
       Backbone.View.prototype.initialize.call(this, options);
@@ -258,7 +261,7 @@
         view.close && view.close();
       });
 
-      this.trigger("close", this);
+      this.trigger('close', this);
 
       this.unbind();
       this.stopListening();
