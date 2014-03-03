@@ -135,21 +135,35 @@
     //
     // Implementation of `_.each`.
     this.each = function(iterator, context) {
-      _.each(this.getViews(), iterator, context);
+      _.each(views, iterator, context);
     };
 
     // ##getViews
     //
-    // Get the managed views stored in `views`.
+    // Get the views stored in `views`.
     this.getViews = function() {
-      return views;
+      return _.map(views, function(mView) {return mView.view;});
+    };
+
+    // ##getManagedViews
+    //
+    // Returns all the managed views or the managed views associated with a
+    // specific view.
+    this.getManagedViews = function(view) {
+      if (!view) return views;
+      return _.filter(views, function(mView) {
+        return mView.view === view;
+      });
     };
 
     // ##getViewsByModel
     //
     // Get the managed views that are associated with a specific model.
     this.getViewsByModel = function(model) {
-      return viewsByModel[model.cid];
+      var views = viewsByModel[model.cid];
+      return views.length ? _.map(views, function(mView) {
+        return mView.view;
+      }): [];
     };
 
     _.bindAll(this, 'register', 'unRegister', 'getViews', 'getViewsByModel',

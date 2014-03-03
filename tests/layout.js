@@ -130,19 +130,19 @@
 
       it('stores the view correctly', function() {
         layout.registerView(myView);
-        var mView = layout.viewManager.getViews()[0];
-        expect(mView.view).toBe(myView);
+        var view = layout.viewManager.getViews()[0];
+        expect(view).toBe(myView);
       });
 
       it('registers a view with anchor', function() {
         layout.registerView(myView, {anchor: '.content'});
-        var mView = layout.viewManager.getViews()[0];
+        var mView = layout.viewManager.getManagedViews()[0];
         expect(mView.anchor).toBe('.content');
       });
 
       it('registers a view with replace', function() {
         layout.registerView(myView, {replace: true});
-        var mView = layout.viewManager.getViews()[0];
+        var mView = layout.viewManager.getManagedViews()[0];
         expect(mView.replace).toBe(true);
       });
 
@@ -165,12 +165,12 @@
 
         var views = layout.viewManager.getViewsByModel(modelOne);
         expect(views.length).toEqual(2);
-        expect(views[0].view.model).toBe(modelOne);
-        expect(views[1].view.model).toBe(modelOne);
+        expect(views[0].model).toBe(modelOne);
+        expect(views[1].model).toBe(modelOne);
 
         views = layout.viewManager.getViewsByModel(modelTwo);
         expect(views.length).toEqual(1);
-        expect(views[0].view.model).toBe(modelTwo);
+        expect(views[0].model).toBe(modelTwo);
       });
 
       describe('#unRegister', function() {
@@ -198,7 +198,7 @@
           layout.viewManager.unRegister(viewOne);
           var views = layout.viewManager.getViewsByModel(modelOne);
           expect(views.length).toEqual(1);
-          expect(views[0].view).not.toBe(viewOne);
+          expect(views[0]).not.toBe(viewOne);
         });
 
         it('unbinds the view', function() {
