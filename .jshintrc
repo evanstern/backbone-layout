@@ -2,6 +2,7 @@
   "node": true,
   "esnext": true,
   "bitwise": true,
+  "quotmark": "single",
   "camelcase": true,
   "curly": true,
   "eqeqeq": true,
