@@ -1,4 +1,4 @@
-/* global $, Backbone, _, jasmine, beforeEach, window, expect, define, describe, it */
+/* global spyOn, $, Backbone, _, jasmine, beforeEach, window, expect, define, describe, it */
 (function(root, factory) {
   'use strict';
 
@@ -151,6 +151,71 @@
         var iterator = jasmine.createSpy('iterator');
         layout.viewManager.each(iterator, this);
         expect(iterator).toHaveBeenCalled();
+      });
+
+      it('stores views by their model', function() {
+        var modelOne = new (Backbone.Model.extend())();
+        var modelTwo = new (Backbone.Model.extend())();
+        var viewOne = new (Backbone.View.extend())({model: modelOne});
+        var viewTwo = new (Backbone.View.extend())({model: modelOne});
+        var viewThree = new (Backbone.View.extend())({model: modelTwo});
+        layout.registerView(viewOne);
+        layout.registerView(viewTwo);
+        layout.registerView(viewThree);
+
+        var views = layout.viewManager.getViewsByModel(modelOne);
+        expect(views.length).toEqual(2);
+        expect(views[0].view.model).toBe(modelOne);
+        expect(views[1].view.model).toBe(modelOne);
+
+        views = layout.viewManager.getViewsByModel(modelTwo);
+        expect(views.length).toEqual(1);
+        expect(views[0].view.model).toBe(modelTwo);
+      });
+
+      describe('#unRegister', function() {
+        it('removes the managed view from `views`', function() {
+          layout.registerView(myView);
+          layout.viewManager.unRegister(myView);
+          expect(layout.viewManager.getViews().length).toEqual(0);
+
+          // Also make sure it doesn't explode when we try to remove something
+          // that isn't there.
+          layout.viewManager.unRegister(myView);
+          expect(layout.viewManager.getViews().length).toEqual(0);
+        });
+
+        it('removes the managed view from `viewsByModel`', function() {
+          var modelOne = new (Backbone.Model.extend())();
+          var modelTwo = new (Backbone.Model.extend())();
+          var viewOne = new (Backbone.View.extend())({model: modelOne});
+          var viewTwo = new (Backbone.View.extend())({model: modelOne});
+          var viewThree = new (Backbone.View.extend())({model: modelTwo});
+          layout.registerView(viewOne);
+          layout.registerView(viewTwo);
+          layout.registerView(viewThree);
+
+          layout.viewManager.unRegister(viewOne);
+          var views = layout.viewManager.getViewsByModel(modelOne);
+          expect(views.length).toEqual(1);
+          expect(views[0].view).not.toBe(viewOne);
+        });
+
+        it('unbinds the view', function() {
+          layout.registerView(myView);
+          layout.viewManager.unRegister(myView);
+          var callback = jasmine.createSpy('callback');
+          layout.on('trigger', callback);
+          myView.trigger('trigger');
+          expect(callback.calls.length).toEqual(0);
+        });
+
+        it('is called via `layout.unRegisterView`', function() {
+          spyOn(layout.viewManager, 'unRegister');
+          layout.registerView(myView);
+          layout.unRegisterView(myView);
+          expect(layout.viewManager.unRegister).toHaveBeenCalledWith(myView);
+        });
       });
     });
 
@@ -337,6 +402,15 @@
         layout.registerView(view1);
         layout.close();
         expect(callback.calls.length).toEqual(1);
+      });
+
+      it('unregisters the view', function() {
+        var View = Backbone.View.extend();
+        var view = new View();
+        layout.registerView(view);
+        layout.close();
+
+        expect(layout.viewManager.getViews().length).toEqual(0);
       });
     });
 }));

@@ -43,7 +43,12 @@
   // closed when the parent is closed.
   //
   var ViewManager = function() {
+
+    // A list of all the managed views
     var views = [];
+
+    // A mapping of models to their views
+    var viewsByModel = {};
 
     // # register
     //
@@ -88,17 +93,67 @@
 
       var mView = new ManagedView(view, options);
       views.push(mView);
+
+      var model = view.model;
+      if(model) {
+        var cid = model.cid;
+        viewsByModel[cid] || (viewsByModel[cid] = []);
+        viewsByModel[cid].push(mView);
+      }
     };
 
+    // # unRegister
+    //
+    // Un-register the specified view.
+    //
+    // This will do the following:
+    //
+    // * Remove the view from the `views` collection
+    // * Remove the view from any models it mapped to (`viewsByModel`)
+    // * Stop listening to the view
+    //
+    this.unRegister = function(view) {
+
+      // Remove the managed view from the list
+      var mView = _.filter(views, function(v) {
+        return v.view.cid === view.cid;
+      })[0];
+      views = _.without(views, mView);
+
+      // Remove any instances of this view from the viewsByModel object.
+      var without;
+      _.each(viewsByModel, function(mViews, mCid, obj) {
+        without = _.without(mViews, mView);
+        obj[mCid] && (obj[mCid] = without);
+      });
+
+      // Unbind our listener
+      this.stopListening(view);
+    };
+
+    // # each
+    //
+    // Implementation of `_.each`.
     this.each = function(iterator, context) {
       _.each(this.getViews(), iterator, context);
     };
 
+    // # getViews
+    //
+    // Get the managed views stored in `views`.
     this.getViews = function() {
       return views;
     };
 
-    _.bindAll(this, 'register', 'each');
+    // # getViewsByModel
+    //
+    // Get the managed views that are associated with a specific model.
+    this.getViewsByModel = function(model) {
+      return viewsByModel[model.cid];
+    };
+
+    _.bindAll(this, 'register', 'unRegister', 'getViews', 'getViewsByModel',
+              'each');
   };
   _.extend(ViewManager.prototype, Backbone.Events);
 
@@ -200,6 +255,10 @@
       this.listenTo(this.viewManager, 'all', function() {
         this.trigger.apply(this, arguments);
       }, this);
+
+      this.listenTo(this.viewManager, 'remove', function() {
+      }, this);
+
       Backbone.View.prototype.initialize.call(this, options);
     }
 
@@ -214,6 +273,14 @@
     , registerView: function(view, options) {
       options || (options = {});
       this.viewManager.register(view, options);
+    }
+
+    // # unRegisterView
+    //
+    // Unregisters the view with the `ViewManager`.
+    //
+    , unRegisterView: function(view) {
+      this.viewManager.unRegister(view);
     }
 
     // # render
@@ -258,18 +325,33 @@
     // those views from becoming orphaned and prevents zombie binds from
     // persisting.
     //
+    // Calling `close` on a `Layout` will also un-register all child views
+    // from the `Layout`.
+    //
     , close: function() {
+
+      // First, make sure that each and every child view has been closed and
+      // un-registered.
       this.viewManager.each(function(managed, index, list) {
         var view = managed.view;
-        view.close && view.close();
-      });
 
+        // Call `close` on the view (if it has a `close` method)
+        view.close && view.close();
+
+        // Unregister this child view
+        this.unRegisterView(view);
+      }, this);
+
+      // Other objects can listen for this close event and respond
+      // appropriately.
       this.trigger('close', this);
 
+      // Super-duper make sure that this view is not bound to anything.
       this.unbind();
       this.stopListening();
       this.remove();
 
+      // Do any post-close work
       this.onClose && this.onClose();
 
       return this;
