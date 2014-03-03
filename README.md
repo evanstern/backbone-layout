@@ -103,6 +103,17 @@ There's more! Here are some other things that `BackboneLayout` provides:
         someView.trigger('foo');
         >> 'bar'
 
+* Registered views can be looked up via their models.
+
+        var model = new Backbone.Model();
+        var viewOne = new Backbone.View({model: model});
+        var viewTwo = new Backbone.View({model: model});
+        layout.registerView(viewOne);
+        layout.registerView(viewTwo);
+
+        layout.viewManager.getViewsByModel(model);
+        >> [viewOne, viewTwo]
+
 Examples
 -------------
 
