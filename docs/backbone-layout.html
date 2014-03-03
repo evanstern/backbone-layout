@@ -27,7 +27,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>Backbone-Layout.js 1.0.0</p>
+              <p>Backbone-Layout.js 1.1.0</p>
 
             </div>
             
@@ -318,7 +318,7 @@ view’s element will not be added to the DOM.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.each = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(iterator, context)</span> {</span>
-      _.each(<span class="hljs-keyword">this</span>.getViews(), iterator, context);
+      _.each(views, iterator, context);
     };</pre></div></div>
             
         </li>
@@ -331,12 +331,12 @@ view’s element will not be added to the DOM.</p>
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h2 id="getviews">getViews</h2>
-<p>Get the managed views stored in <code>views</code>.</p>
+<p>Get the views stored in <code>views</code>.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getViews = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">return</span> views;
+      <span class="hljs-keyword">return</span> _.map(views, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mView)</span> {</span><span class="hljs-keyword">return</span> mView.view;});
     };</pre></div></div>
             
         </li>
@@ -348,19 +348,18 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h2 id="getviewsbymodel">getViewsByModel</h2>
-<p>Get the managed views that are associated with a specific model.</p>
+              <h2 id="getmanagedviews">getManagedViews</h2>
+<p>Returns all the managed views or the managed views associated with a
+specific view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getViewsByModel = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span> {</span>
-      <span class="hljs-keyword">return</span> viewsByModel[model.cid];
-    };
-
-    _.bindAll(<span class="hljs-keyword">this</span>, <span class="hljs-string">'register'</span>, <span class="hljs-string">'unRegister'</span>, <span class="hljs-string">'getViews'</span>, <span class="hljs-string">'getViewsByModel'</span>,
-              <span class="hljs-string">'each'</span>);
-  };
-  _.extend(ViewManager.prototype, Backbone.Events);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getManagedViews = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(view)</span> {</span>
+      <span class="hljs-keyword">if</span> (!view) <span class="hljs-keyword">return</span> views;
+      <span class="hljs-keyword">return</span> _.filter(views, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mView)</span> {</span>
+        <span class="hljs-keyword">return</span> mView.view === view;
+      });
+    };</pre></div></div>
             
         </li>
         
@@ -371,9 +370,22 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h2 id="backbonelayout">BackboneLayout</h2>
+              <h2 id="getviewsbymodel">getViewsByModel</h2>
+<p>Get the managed views that are associated with a specific model.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getViewsByModel = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span> {</span>
+      <span class="hljs-keyword">var</span> views = viewsByModel[model.cid];
+      <span class="hljs-keyword">return</span> views.length ? _.map(views, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mView)</span> {</span>
+        <span class="hljs-keyword">return</span> mView.view;
+      }): [];
+    };
+
+    _.bindAll(<span class="hljs-keyword">this</span>, <span class="hljs-string">'register'</span>, <span class="hljs-string">'unRegister'</span>, <span class="hljs-string">'getViews'</span>, <span class="hljs-string">'getViewsByModel'</span>,
+              <span class="hljs-string">'each'</span>);
+  };
+  _.extend(ViewManager.prototype, Backbone.Events);</pre></div></div>
             
         </li>
         
@@ -383,6 +395,19 @@ view’s element will not be added to the DOM.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h2 id="backbonelayout">BackboneLayout</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>When extending BackboneLayout there are a few interface methods that can
 optionally be defined.</p>
@@ -414,11 +439,11 @@ optionally be defined.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h2 id="constructor">constructor</h2>
 <p>Pre-processing to make sure the BackboneLayout has all the data and
@@ -433,11 +458,11 @@ attributes we expect it to have.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Process <code>defaults</code> similarly to <code>Backbone.Model</code></p>
 <pre><code><span class="hljs-keyword">var</span> MyLayout = BackboneLayout.extend({
@@ -459,11 +484,11 @@ layout.options.foo
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Serialize can be overridden via the options</p>
 <pre><code><span class="hljs-keyword">var</span> layout = <span class="hljs-keyword">new</span> BackboneLayout({
@@ -484,11 +509,11 @@ layout.serialize();
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Restore pre Backbone 1.1.0 <code>this.options</code> functionality</p>
 
@@ -502,11 +527,11 @@ layout.serialize();
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h2 id="initialize">initialize</h2>
 <p>When initializing a <code>BackboneLayout</code> it is good practice to define
@@ -533,11 +558,11 @@ how nested views are rendered.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Bubble up anything the view manager triggers</p>
 
@@ -556,11 +581,11 @@ how nested views are rendered.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h2 id="registerview">registerView</h2>
 <p>Register a view with the <code>ViewManager</code>. This will specify an
@@ -578,11 +603,11 @@ added.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h2 id="unregisterview">unRegisterView</h2>
 <p>Unregisters the view with the <code>ViewManager</code>.</p>
@@ -596,11 +621,11 @@ added.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h2 id="render">render</h2>
 <p>Render this view and all child views registered with thie view
@@ -640,11 +665,11 @@ manager.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <h2 id="close">close</h2>
 <p>Before closing this view, close all the child views. This prevents
@@ -660,11 +685,11 @@ from the <code>Layout</code>.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>First, make sure that each and every child view has been closed and
 un-registered.</p>
@@ -677,11 +702,11 @@ un-registered.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Call <code>close</code> on the view (if it has a <code>close</code> method)</p>
 
@@ -692,11 +717,11 @@ un-registered.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Unregister this child view</p>
 
@@ -708,11 +733,11 @@ un-registered.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Other objects can listen for this close event and respond
 appropriately.</p>
@@ -724,11 +749,11 @@ appropriately.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Super-duper make sure that this view is not bound to anything.</p>
 
@@ -741,11 +766,11 @@ appropriately.</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Do any post-close work</p>
 
@@ -759,11 +784,11 @@ appropriately.</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h2 id="serialize">serialize</h2>
 <p>Returns an object of data. This becomes the template context object.
