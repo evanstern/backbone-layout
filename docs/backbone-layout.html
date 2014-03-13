@@ -27,7 +27,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>Backbone-Layout.js 1.1.0</p>
+              <p>Backbone-Layout.js 1.1.1</p>
 
             </div>
             
@@ -452,8 +452,7 @@ attributes we expect it to have.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
-      options || (options = {});
-      <span class="hljs-keyword">this</span>.viewManager = <span class="hljs-keyword">new</span> ViewManager();</pre></div></div>
+      options || (options = {});</pre></div></div>
             
         </li>
         
@@ -463,6 +462,27 @@ attributes we expect it to have.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Since the options object is extended with the defaults, if, for some
+reason, the options object is shared by multiple instances (i.e. you
+pass the same options object to multiple instances) then they will
+all share the same defaults. To prevent this, the options need to be
+cloned so that each instance gets its own set of unmodified options.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      options = _.clone(options);
+
+      <span class="hljs-keyword">this</span>.viewManager = <span class="hljs-keyword">new</span> ViewManager();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Process <code>defaults</code> similarly to <code>Backbone.Model</code></p>
 <pre><code><span class="hljs-keyword">var</span> MyLayout = BackboneLayout.extend({
@@ -484,11 +504,11 @@ layout.options.foo
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Serialize can be overridden via the options</p>
 <pre><code><span class="hljs-keyword">var</span> layout = <span class="hljs-keyword">new</span> BackboneLayout({
@@ -509,11 +529,11 @@ layout.serialize();
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Restore pre Backbone 1.1.0 <code>this.options</code> functionality</p>
 
@@ -527,11 +547,11 @@ layout.serialize();
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h2 id="initialize">initialize</h2>
 <p>When initializing a <code>BackboneLayout</code> it is good practice to define
@@ -558,11 +578,11 @@ how nested views are rendered.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Bubble up anything the view manager triggers</p>
 
@@ -581,11 +601,11 @@ how nested views are rendered.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h2 id="registerview">registerView</h2>
 <p>Register a view with the <code>ViewManager</code>. This will specify an
@@ -603,11 +623,11 @@ added.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h2 id="unregisterview">unRegisterView</h2>
 <p>Unregisters the view with the <code>ViewManager</code>.</p>
@@ -621,11 +641,11 @@ added.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <h2 id="render">render</h2>
 <p>Render this view and all child views registered with thie view
@@ -665,11 +685,11 @@ manager.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h2 id="close">close</h2>
 <p>Before closing this view, close all the child views. This prevents
@@ -685,11 +705,11 @@ from the <code>Layout</code>.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>First, make sure that each and every child view has been closed and
 un-registered.</p>
@@ -702,11 +722,11 @@ un-registered.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Call <code>close</code> on the view (if it has a <code>close</code> method)</p>
 
@@ -717,11 +737,11 @@ un-registered.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Unregister this child view</p>
 
@@ -733,11 +753,11 @@ un-registered.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Other objects can listen for this close event and respond
 appropriately.</p>
@@ -749,11 +769,11 @@ appropriately.</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Super-duper make sure that this view is not bound to anything.</p>
 
@@ -766,11 +786,11 @@ appropriately.</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Do any post-close work</p>
 
@@ -784,11 +804,11 @@ appropriately.</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h2 id="serialize">serialize</h2>
 <p>Returns an object of data. This becomes the template context object.

@@ -1,4 +1,4 @@
-// Backbone-Layout.js 1.1.0
+// Backbone-Layout.js 1.1.1
 
 // (c) 2013 Evan Stern
 // Backbone-Layout may be freely distributed under the MIT license.
@@ -203,6 +203,14 @@
     //
     constructor: function(options) {
       options || (options = {});
+
+      // Since the options object is extended with the defaults, if, for some
+      // reason, the options object is shared by multiple instances (i.e. you
+      // pass the same options object to multiple instances) then they will
+      // all share the same defaults. To prevent this, the options need to be
+      // cloned so that each instance gets its own set of unmodified options.
+      options = _.clone(options);
+
       this.viewManager = new ViewManager();
 
       // Process `defaults` similarly to `Backbone.Model`
