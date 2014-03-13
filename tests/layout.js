@@ -30,13 +30,20 @@
 
   describe('Constructor', function() {
     var Layout,
-        layout;
+        layout,
+        layout2,
+        options = {foo: 'bar'};
 
     beforeEach(function() {
       Layout = BackboneLayout.extend({
-          defaults: { bar: 'foo' }
+          defaults: function() {
+            return {
+              bar: {'foo':'foobar'}
+            };
+          }
       });
-      layout = new Layout({foo: 'bar'});
+      layout = new Layout(options);
+      layout2 = new Layout(options);
     });
 
     it('Stores options on `this`', function() {
@@ -47,8 +54,18 @@
       expect(layout.options.foo).toBe('bar');
     });
 
-    it('Adds `defaults` to `options`', function() {
-      expect(layout.options.bar).toBe('foo');
+    describe('when adding defaults', function() {
+      it('should add `defaults` to `options`', function() {
+        expect(layout.options.bar.foo).toBe('foobar');
+      });
+
+      it('should contain a unique options object', function() {
+        expect(layout.options).not.toBe(layout2.options);
+      });
+
+      it('should not have the same `defaults` instances', function() {
+        expect(layout.options.bar).not.toBe(layout2.options.bar);
+      });
     });
 
     it('Has a viewManager', function() {
