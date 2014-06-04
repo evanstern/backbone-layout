@@ -28,6 +28,7 @@
     options || (options = {});
     this.id = _.uniqueId('managed_');
     this.view = view;
+    this.name = options.name;
     this.anchor = options.anchor;
     this.replace = options.replace;
   };
@@ -49,6 +50,7 @@
 
     // A mapping of models to their views
     var viewsByModel = {};
+    var viewsByName = {};
 
     // ##register
     //
@@ -94,6 +96,10 @@
       var mView = new ManagedView(view, options);
       views.push(mView);
 
+      if (mView.name) {
+        viewsByName[mView.name] = mView;
+      }
+
       var model = view.model;
       if(model) {
         var cid = model.cid;
@@ -114,11 +120,18 @@
     //
     this.unRegister = function(view) {
 
-      // Remove the managed view from the list
+      // Find the managed view record
       var mView = _.filter(views, function(v) {
         return v.view.cid === view.cid;
       })[0];
+
+      // Remove the managed view from the list
       views = _.without(views, mView);
+
+      // Remove any instance of this view stored by name.
+      if (mView) {
+        viewsByName = _.omit(viewsByName, mView.name);
+      }
 
       // Remove any instances of this view from the viewsByModel object.
       var without;
@@ -164,6 +177,10 @@
       return views.length ? _.map(views, function(mView) {
         return mView.view;
       }): [];
+    };
+
+    this.getViewByName = function(name) {
+      return viewsByName[name];
     };
 
     _.bindAll(this, 'register', 'unRegister', 'getViews', 'getViewsByModel',
@@ -303,6 +320,11 @@
     //
     , unRegisterView: function(view) {
       this.viewManager.unRegister(view);
+    }
+
+    , getViewByName: function(name) {
+      var mView = this.viewManager.getViewByName(name);
+      return mView ? mView.view : undefined;
     }
 
     // ##render
