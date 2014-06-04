@@ -28,6 +28,7 @@
     options || (options = {});
     this.id = _.uniqueId('managed_');
     this.view = view;
+    this.name = options.name;
     this.anchor = options.anchor;
     this.replace = options.replace;
   };
