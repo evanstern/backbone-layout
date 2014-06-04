@@ -196,6 +196,12 @@
       expect(views[0].model).toBe(modelTwo);
     });
 
+    it('stores views by their names', function() {
+      layout.registerView(myView, {name: 'my-view'});
+      var mView = layout.viewManager.getViewByName('my-view');
+      expect(mView.name).toBe('my-view');
+    });
+
     describe('#unRegister', function() {
       it('removes the managed view from `views`', function() {
         layout.registerView(myView);
@@ -222,6 +228,13 @@
         var views = layout.viewManager.getViewsByModel(modelOne);
         expect(views.length).toEqual(1);
         expect(views[0]).not.toBe(viewOne);
+      });
+
+      it('removes the managed view from `viewsByName`', function() {
+        layout.registerView(myView, {name: 'my-view'});
+        layout.viewManager.unRegister(myView);
+        var mView = layout.viewManager.getViewByName('my-view');
+        expect(mView).toBe(undefined);
       });
 
       it('unbinds the view', function() {
