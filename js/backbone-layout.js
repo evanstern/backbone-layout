@@ -322,6 +322,11 @@
       this.viewManager.unRegister(view);
     }
 
+    , getViewByName: function(name) {
+      var mView = this.viewManager.getViewByName(name);
+      return mView ? mView.view : undefined;
+    }
+
     // ##render
     //
     // Render this view and all child views registered with thie view
