@@ -449,6 +449,16 @@
       expect(layout.viewManager.getViews().length).toEqual(0);
     });
   });
+
+  describe('When adding a view', function() {
+    var layout = new (BackboneLayout.extend())();
+    var View = Backbone.View.extend();
+    var view = new View();
+    layout.registerView(view);
+    it('registers appropriately', function() {
+      expect(layout.viewManager.getViews().length).toEqual(1);
+    });
+  });
 }));
 
 
