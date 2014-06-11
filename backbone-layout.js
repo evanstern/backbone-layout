@@ -1,4 +1,4 @@
-// Backbone-Layout.js 1.2.1
+// Backbone-Layout.js 1.2.2
 
 // (c) 2013 Evan Stern
 // Backbone-Layout may be freely distributed under the MIT license.
@@ -46,11 +46,11 @@
   var ViewManager = function() {
 
     // A list of all the managed views
-    var views = [];
+    this._views = [];
 
     // A mapping of models to their views
-    var viewsByModel = {};
-    var viewsByName = {};
+    this._viewsByModel = {};
+    this._viewsByName = {};
 
     // ##register
     //
@@ -94,17 +94,17 @@
       }, this);
 
       var mView = new ManagedView(view, options);
-      views.push(mView);
+      this._views.push(mView);
 
       if (mView.name) {
-        viewsByName[mView.name] = mView;
+        this._viewsByName[mView.name] = mView;
       }
 
       var model = view.model;
       if(model) {
         var cid = model.cid;
-        viewsByModel[cid] || (viewsByModel[cid] = []);
-        viewsByModel[cid].push(mView);
+        this._viewsByModel[cid] || (this._viewsByModel[cid] = []);
+        this._viewsByModel[cid].push(mView);
       }
     };
 
@@ -121,21 +121,21 @@
     this.unRegister = function(view) {
 
       // Find the managed view record
-      var mView = _.filter(views, function(v) {
+      var mView = _.filter(this._views, function(v) {
         return v.view.cid === view.cid;
       })[0];
 
       // Remove the managed view from the list
-      views = _.without(views, mView);
+      this._views = _.without(this._views, mView);
 
       // Remove any instance of this view stored by name.
       if (mView) {
-        viewsByName = _.omit(viewsByName, mView.name);
+        this._viewsByName = _.omit(this._viewsByName, mView.name);
       }
 
       // Remove any instances of this view from the viewsByModel object.
       var without;
-      _.each(viewsByModel, function(mViews, mCid, obj) {
+      _.each(this._viewsByModel, function(mViews, mCid, obj) {
         without = _.without(mViews, mView);
         obj[mCid] && (obj[mCid] = without);
       });
@@ -148,14 +148,14 @@
     //
     // Implementation of `_.each`.
     this.each = function(iterator, context) {
-      _.each(views, iterator, context);
+      _.each(this._views, iterator, context);
     };
 
     // ##getViews
     //
     // Get the views stored in `views`.
     this.getViews = function() {
-      return _.map(views, function(mView) {return mView.view;});
+      return _.map(this._views, function(mView) {return mView.view;});
     };
 
     // ##getManagedViews
@@ -163,8 +163,8 @@
     // Returns all the managed views or the managed views associated with a
     // specific view.
     this.getManagedViews = function(view) {
-      if (!view) return views;
-      return _.filter(views, function(mView) {
+      if (!view) return this._views;
+      return _.filter(this._views, function(mView) {
         return mView.view === view;
       });
     };
@@ -173,14 +173,17 @@
     //
     // Get the managed views that are associated with a specific model.
     this.getViewsByModel = function(model) {
-      var views = viewsByModel[model.cid];
+      var views = this._viewsByModel[model.cid];
       return views.length ? _.map(views, function(mView) {
         return mView.view;
       }): [];
     };
 
+    // ##getViewByName
+    //
+    // Return the managed view associated with the given name.
     this.getViewByName = function(name) {
-      return viewsByName[name];
+      return this._viewsByName[name];
     };
 
     _.bindAll(this, 'register', 'unRegister', 'getViews', 'getViewsByModel',
@@ -322,6 +325,9 @@
       this.viewManager.unRegister(view);
     }
 
+    // ##getViewByName
+    //
+    // Return the view associated with the given name.
     , getViewByName: function(name) {
       var mView = this.viewManager.getViewByName(name);
       return mView ? mView.view : undefined;
