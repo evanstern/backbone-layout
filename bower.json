@@ -1,6 +1,6 @@
 {
   "name": "backbone-layout",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "main": "backbone-layout.js",
   "ignore": [
     "js",
@@ -17,4 +17,3 @@
     "jquery": "~2.1.0"
   }
 }
-
