@@ -27,9 +27,25 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>Backbone-Layout.js 1.2.2</p>
+              <p>Backbone-Layout.js 1.2.3</p>
+<p>(c) 2013 Evan Stern
+Backbone-Layout may be freely distributed under the MIT license.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="comment">/* global define, _ */</span>
+(<span class="function"><span class="keyword">function</span><span class="params">(root, factory)</span> {</span>
+  <span class="string">'use strict'</span>;
+
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> define === <span class="string">'function'</span> &amp;&amp; define.amd) {
+    define([<span class="string">'backbone'</span>, <span class="string">'underscore'</span>], factory);
+  } <span class="keyword">else</span> {
+    root.BackboneLayout = factory(root.Backbone, root._);
+  }
+}(<span class="keyword">this</span>, <span class="function"><span class="keyword">function</span><span class="params">(Backbone, _)</span> {</span>
+  <span class="string">'use strict'</span>;
+
+  <span class="keyword">var</span> $ = Backbone.$;</pre></div></div>
             
         </li>
         
@@ -40,25 +56,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>(c) 2013 Evan Stern
-Backbone-Layout may be freely distributed under the MIT license.</p>
+              <h2 id="managedview">ManagedView</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-comment">/* global define, _ */</span>
-(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(root, factory)</span> {</span>
-<span class="hljs-pi">  'use strict'</span>;
-
-  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {
-    define([<span class="hljs-string">'backbone'</span>, <span class="hljs-string">'underscore'</span>], factory);
-  } <span class="hljs-keyword">else</span> {
-    root.BackboneLayout = factory(root.Backbone, root._);
-  }
-}(<span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Backbone, _)</span> {</span>
-<span class="hljs-pi">  'use strict'</span>;
-
-  <span class="hljs-keyword">var</span> $ = Backbone.$;</pre></div></div>
             
         </li>
         
@@ -69,9 +69,20 @@ Backbone-Layout may be freely distributed under the MIT license.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h2 id="managedview">ManagedView</h2>
+              <p>A managed view is simply a wrapper around a <code>Backbone.View</code>. It stores
+meta information about the view so that it can be appropriately managed
+by the <code>ViewManager</code>.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> ManagedView = <span class="function"><span class="keyword">function</span> <span class="title">ManagedView</span><span class="params">(view, options)</span> {</span>
+    options || (options = {});
+    <span class="keyword">this</span>.id = _.uniqueId(<span class="string">'managed_'</span>);
+    <span class="keyword">this</span>.view = view;
+    <span class="keyword">this</span>.name = options.name;
+    <span class="keyword">this</span>.anchor = options.anchor;
+    <span class="keyword">this</span>.replace = options.replace;
+  };</pre></div></div>
             
         </li>
         
@@ -82,20 +93,9 @@ Backbone-Layout may be freely distributed under the MIT license.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>A managed view is simply a wrapper around a <code>Backbone.View</code>. It stores
-meta information about the view so that it can be appropriately managed
-by the <code>ViewManager</code>.</p>
+              <h2 id="viewmanager">ViewManager</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> ManagedView = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ManagedView</span><span class="hljs-params">(view, options)</span> {</span>
-    options || (options = {});
-    <span class="hljs-keyword">this</span>.id = _.uniqueId(<span class="hljs-string">'managed_'</span>);
-    <span class="hljs-keyword">this</span>.view = view;
-    <span class="hljs-keyword">this</span>.name = options.name;
-    <span class="hljs-keyword">this</span>.anchor = options.anchor;
-    <span class="hljs-keyword">this</span>.replace = options.replace;
-  };</pre></div></div>
             
         </li>
         
@@ -106,9 +106,15 @@ by the <code>ViewManager</code>.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="viewmanager">ViewManager</h2>
+              <p>The view manager keeps track of the views that have been registered with
+a BackboneLayout. It is the interface to those views.</p>
+<p>Views that are in the view manager will have their events bubbled up to
+the parent view, they will be rendered when the parent is rendered and
+closed when the parent is closed.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> ViewManager = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span></pre></div></div>
             
         </li>
         
@@ -119,15 +125,11 @@ by the <code>ViewManager</code>.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>The view manager keeps track of the views that have been registered with
-a BackboneLayout. It is the interface to those views.</p>
-<p>Views that are in the view manager will have their events bubbled up to
-the parent view, they will be rendered when the parent is rendered and
-closed when the parent is closed.</p>
+              <p>A list of all the managed views</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> ViewManager = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>._views = [];</pre></div></div>
             
         </li>
         
@@ -138,11 +140,12 @@ closed when the parent is closed.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>A list of all the managed views</p>
+              <p>A mapping of models to their views</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._views = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>._viewsByModel = {};
+    <span class="keyword">this</span>._viewsByName = {};</pre></div></div>
             
         </li>
         
@@ -152,22 +155,6 @@ closed when the parent is closed.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>A mapping of models to their views</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._viewsByModel = {};
-    <span class="hljs-keyword">this</span>._viewsByName = {};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h2 id="register">register</h2>
 <p>Register a view with the view manager.  This begins the management
@@ -181,26 +168,58 @@ of the view.</p>
 </li>
 <li><p>replace</p>
 <p>  A boolean flag specifying whether or not to replace the anchor
-  with the view’s element.
+  with the view&#39;s element.
   Defaults to <code>false</code></p>
 </li>
 </ul>
 <p>If no anchor is given, the view will be managed as normal but the
-view’s element will not be added to the DOM.</p>
+view&#39;s element will not be added to the DOM.</p>
 <p>Examples:</p>
-<pre><code><span class="hljs-comment">// The view will be appended to $('.container', this.el)</span>
-<span class="hljs-keyword">this</span>.registerView(view, {anchor: <span class="hljs-string">'.container'</span>})
+<pre><code>// The view will be appended to $(&#39;.container&#39;, this.el)
+this.registerView(view, {anchor: &#39;.container&#39;})
 
-<span class="hljs-comment">// The view will replace $('.container', this.el)</span>
-<span class="hljs-keyword">this</span>.registerView(view, {anchor: <span class="hljs-string">'.container'</span>, replace: <span class="hljs-literal">true</span>});
+// The view will replace $(&#39;.container&#39;, this.el)
+this.registerView(view, {anchor: &#39;.container&#39;, replace: true});
 
-<span class="hljs-comment">// The view will be registered but not added to the DOM</span>
-<span class="hljs-keyword">this</span>.registerView(view);
-</code></pre>
+// The view will be registered but not added to the DOM
+this.registerView(view);</code></pre>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.register = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(view, options)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.register = <span class="function"><span class="keyword">function</span><span class="params">(view, options)</span> {</span>
       options || (options = {});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Bubble up all the events from this view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.listenTo(view, <span class="string">'all'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+          <span class="keyword">this</span>.trigger.apply(<span class="keyword">this</span>, arguments);
+      }, <span class="keyword">this</span>);
+
+      <span class="keyword">var</span> mView = <span class="keyword">new</span> ManagedView(view, options);
+      <span class="keyword">this</span>._views.push(mView);
+
+      <span class="keyword">if</span> (mView.name) {
+        <span class="keyword">this</span>._viewsByName[mView.name] = mView;
+      }
+
+      <span class="keyword">var</span> model = view.model;
+      <span class="keyword">if</span>(model) {
+        <span class="keyword">var</span> cid = model.cid;
+        <span class="keyword">this</span>._viewsByModel[cid] || (<span class="keyword">this</span>._viewsByModel[cid] = []);
+        <span class="keyword">this</span>._viewsByModel[cid].push(mView);
+      }
+    };</pre></div></div>
             
         </li>
         
@@ -210,38 +229,6 @@ view’s element will not be added to the DOM.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>Bubble up all the events from this view.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.listenTo(view, <span class="hljs-string">'all'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-          <span class="hljs-keyword">this</span>.trigger.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-      }, <span class="hljs-keyword">this</span>);
-
-      <span class="hljs-keyword">var</span> mView = <span class="hljs-keyword">new</span> ManagedView(view, options);
-      <span class="hljs-keyword">this</span>._views.push(mView);
-
-      <span class="hljs-keyword">if</span> (mView.name) {
-        <span class="hljs-keyword">this</span>._viewsByName[mView.name] = mView;
-      }
-
-      <span class="hljs-keyword">var</span> model = view.model;
-      <span class="hljs-keyword">if</span>(model) {
-        <span class="hljs-keyword">var</span> cid = model.cid;
-        <span class="hljs-keyword">this</span>._viewsByModel[cid] || (<span class="hljs-keyword">this</span>._viewsByModel[cid] = []);
-        <span class="hljs-keyword">this</span>._viewsByModel[cid].push(mView);
-      }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <h2 id="unregister">unRegister</h2>
 <p>Un-register the specified view.</p>
@@ -254,7 +241,24 @@ view’s element will not be added to the DOM.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.unRegister = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(view)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.unRegister = <span class="function"><span class="keyword">function</span><span class="params">(view)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Find the managed view record</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> mView = _.filter(<span class="keyword">this</span>._views, <span class="function"><span class="keyword">function</span><span class="params">(v)</span> {</span>
+        <span class="keyword">return</span> v.view.cid === view.cid;
+      })[<span class="number">0</span>];</pre></div></div>
             
         </li>
         
@@ -265,13 +269,11 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Find the managed view record</p>
+              <p>Remove the managed view from the list</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> mView = _.filter(<span class="hljs-keyword">this</span>._views, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(v)</span> {</span>
-        <span class="hljs-keyword">return</span> v.view.cid === view.cid;
-      })[<span class="hljs-number">0</span>];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>._views = _.without(<span class="keyword">this</span>._views, mView);</pre></div></div>
             
         </li>
         
@@ -282,11 +284,13 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Remove the managed view from the list</p>
+              <p>Remove any instance of this view stored by name.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>._views = _.without(<span class="hljs-keyword">this</span>._views, mView);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (mView) {
+        <span class="keyword">this</span>._viewsByName = _.omit(<span class="keyword">this</span>._viewsByName, mView.name);
+      }</pre></div></div>
             
         </li>
         
@@ -297,13 +301,15 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Remove any instance of this view stored by name.</p>
+              <p>Remove any instances of this view from the viewsByModel object.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (mView) {
-        <span class="hljs-keyword">this</span>._viewsByName = _.omit(<span class="hljs-keyword">this</span>._viewsByName, mView.name);
-      }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> without;
+      _.each(<span class="keyword">this</span>._viewsByModel, <span class="function"><span class="keyword">function</span><span class="params">(mViews, mCid, obj)</span> {</span>
+        without = _.without(mViews, mView);
+        obj[mCid] &amp;&amp; (obj[mCid] = without);
+      });</pre></div></div>
             
         </li>
         
@@ -314,15 +320,12 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Remove any instances of this view from the viewsByModel object.</p>
+              <p>Unbind our listener</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> without;
-      _.each(<span class="hljs-keyword">this</span>._viewsByModel, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mViews, mCid, obj)</span> {</span>
-        without = _.without(mViews, mView);
-        obj[mCid] &amp;&amp; (obj[mCid] = without);
-      });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.stopListening(view);
+    };</pre></div></div>
             
         </li>
         
@@ -333,11 +336,13 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Unbind our listener</p>
+              <h2 id="each">each</h2>
+<p>Implementation of <code>_.each</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.stopListening(view);
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.each = <span class="function"><span class="keyword">function</span><span class="params">(iterator, context)</span> {</span>
+      _.each(<span class="keyword">this</span>._views, iterator, context);
     };</pre></div></div>
             
         </li>
@@ -349,13 +354,13 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h2 id="each">each</h2>
-<p>Implementation of <code>_.each</code>.</p>
+              <h2 id="getviews">getViews</h2>
+<p>Get the views stored in <code>views</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.each = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(iterator, context)</span> {</span>
-      _.each(<span class="hljs-keyword">this</span>._views, iterator, context);
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.getViews = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">return</span> _.map(<span class="keyword">this</span>._views, <span class="function"><span class="keyword">function</span><span class="params">(mView)</span> {</span><span class="keyword">return</span> mView.view;});
     };</pre></div></div>
             
         </li>
@@ -367,13 +372,17 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h2 id="getviews">getViews</h2>
-<p>Get the views stored in <code>views</code>.</p>
+              <h2 id="getmanagedviews">getManagedViews</h2>
+<p>Returns all the managed views or the managed views associated with a
+specific view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getViews = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">return</span> _.map(<span class="hljs-keyword">this</span>._views, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mView)</span> {</span><span class="hljs-keyword">return</span> mView.view;});
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.getManagedViews = <span class="function"><span class="keyword">function</span><span class="params">(view)</span> {</span>
+      <span class="keyword">if</span> (!view) <span class="keyword">return</span> <span class="keyword">this</span>._views;
+      <span class="keyword">return</span> _.filter(<span class="keyword">this</span>._views, <span class="function"><span class="keyword">function</span><span class="params">(mView)</span> {</span>
+        <span class="keyword">return</span> mView.view === view;
+      });
     };</pre></div></div>
             
         </li>
@@ -385,17 +394,16 @@ view’s element will not be added to the DOM.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h2 id="getmanagedviews">getManagedViews</h2>
-<p>Returns all the managed views or the managed views associated with a
-specific view.</p>
+              <h2 id="getviewsbymodel">getViewsByModel</h2>
+<p>Get the managed views that are associated with a specific model.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getManagedViews = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(view)</span> {</span>
-      <span class="hljs-keyword">if</span> (!view) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._views;
-      <span class="hljs-keyword">return</span> _.filter(<span class="hljs-keyword">this</span>._views, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mView)</span> {</span>
-        <span class="hljs-keyword">return</span> mView.view === view;
-      });
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.getViewsByModel = <span class="function"><span class="keyword">function</span><span class="params">(model)</span> {</span>
+      <span class="keyword">var</span> views = <span class="keyword">this</span>._viewsByModel[model.cid];
+      <span class="keyword">return</span> views &amp;&amp; views.length ? _.map(views, <span class="function"><span class="keyword">function</span><span class="params">(mView)</span> {</span>
+        <span class="keyword">return</span> mView.view;
+      }): [];
     };</pre></div></div>
             
         </li>
@@ -407,17 +415,19 @@ specific view.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="getviewsbymodel">getViewsByModel</h2>
-<p>Get the managed views that are associated with a specific model.</p>
+              <h2 id="getviewbyname">getViewByName</h2>
+<p>Return the managed view associated with the given name.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getViewsByModel = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span> {</span>
-      <span class="hljs-keyword">var</span> views = <span class="hljs-keyword">this</span>._viewsByModel[model.cid];
-      <span class="hljs-keyword">return</span> views.length ? _.map(views, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(mView)</span> {</span>
-        <span class="hljs-keyword">return</span> mView.view;
-      }): [];
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.getViewByName = <span class="function"><span class="keyword">function</span><span class="params">(name)</span> {</span>
+      <span class="keyword">return</span> <span class="keyword">this</span>._viewsByName[name];
+    };
+
+    _.bindAll(<span class="keyword">this</span>, <span class="string">'register'</span>, <span class="string">'unRegister'</span>, <span class="string">'getViews'</span>, <span class="string">'getViewsByModel'</span>,
+              <span class="string">'each'</span>);
+  };
+  _.extend(ViewManager.prototype, Backbone.Events);</pre></div></div>
             
         </li>
         
@@ -428,19 +438,9 @@ specific view.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h2 id="getviewbyname">getViewByName</h2>
-<p>Return the managed view associated with the given name.</p>
+              <h2 id="backbonelayout">BackboneLayout</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.getViewByName = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._viewsByName[name];
-    };
-
-    _.bindAll(<span class="hljs-keyword">this</span>, <span class="hljs-string">'register'</span>, <span class="hljs-string">'unRegister'</span>, <span class="hljs-string">'getViews'</span>, <span class="hljs-string">'getViewsByModel'</span>,
-              <span class="hljs-string">'each'</span>);
-  };
-  _.extend(ViewManager.prototype, Backbone.Events);</pre></div></div>
             
         </li>
         
@@ -450,19 +450,6 @@ specific view.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <h2 id="backbonelayout">BackboneLayout</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>When extending BackboneLayout there are a few interface methods that can
 optionally be defined.</p>
@@ -477,19 +464,37 @@ optionally be defined.</p>
 </li>
 </ul>
 <p>Examples:</p>
-<pre><code><span class="hljs-keyword">var</span> MyLayout = BackboneLayout.extend({
-  beforeRender: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    <span class="hljs-comment">// executed before rendering itself or its children</span>
+<pre><code>var MyLayout = BackboneLayout.extend({
+  beforeRender: function() {
+    // executed before rendering itself or its children
   }
 
-  , afterRender: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    <span class="hljs-comment">// executed after rednering itself and its children</span>
+  , afterRender: function() {
+    // executed after rednering itself and its children
   }
-});
-</code></pre>
+});</code></pre>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> BackboneLayout = Backbone.View.extend({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> BackboneLayout = Backbone.View.extend({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h2 id="constructor">constructor</h2>
+<p>Pre-processing to make sure the BackboneLayout has all the data and
+attributes we expect it to have.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    constructor: <span class="function"><span class="keyword">function</span><span class="params">(options)</span> {</span>
+      options || (options = {});</pre></div></div>
             
         </li>
         
@@ -499,24 +504,6 @@ optionally be defined.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <h2 id="constructor">constructor</h2>
-<p>Pre-processing to make sure the BackboneLayout has all the data and
-attributes we expect it to have.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
-      options || (options = {});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Since the options object is extended with the defaults, if, for some
 reason, the options object is shared by multiple instances (i.e. you
@@ -528,7 +515,33 @@ cloned so that each instance gets its own set of unmodified options.</p>
             
             <div class="content"><div class='highlight'><pre>      options = _.clone(options);
 
-      <span class="hljs-keyword">this</span>.viewManager = <span class="hljs-keyword">new</span> ViewManager();</pre></div></div>
+      <span class="keyword">this</span>.viewManager = <span class="keyword">new</span> ViewManager();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Process <code>defaults</code> similarly to <code>Backbone.Model</code></p>
+<pre><code>var MyLayout = BackboneLayout.extend({
+  defaults: {
+    &#39;foo&#39;: &#39;bar&#39;
+  }
+});
+
+var layout = new MyLayout();
+layout.options.foo
+&gt;&gt; &#39;bar&#39;</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (<span class="keyword">this</span>.defaults) {
+        _.defaults(options, _.result(<span class="keyword">this</span>, <span class="string">'defaults'</span>));
+      }</pre></div></div>
             
         </li>
         
@@ -539,21 +552,20 @@ cloned so that each instance gets its own set of unmodified options.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Process <code>defaults</code> similarly to <code>Backbone.Model</code></p>
-<pre><code><span class="hljs-keyword">var</span> MyLayout = BackboneLayout.extend({
-  defaults: {
-    <span class="hljs-string">'foo'</span>: <span class="hljs-string">'bar'</span>
+              <p>Serialize can be overridden via the options</p>
+<pre><code>var layout = new BackboneLayout({
+  serialize: function() {
+    return {&#39;foo&#39;: &#39;bar&#39;};
   }
 });
 
-<span class="hljs-keyword">var</span> layout = <span class="hljs-keyword">new</span> MyLayout();
-layout.options.foo
-&gt;&gt; <span class="hljs-string">'bar'</span>
-</code></pre>
+layout.serialize();
+&gt;&gt; {&#39;foo&#39;: &#39;bar&#39;}</code></pre>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.defaults) {
-        _.defaults(options, _.result(<span class="hljs-keyword">this</span>, <span class="hljs-string">'defaults'</span>));
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (options.serialize) {
+        <span class="keyword">this</span>.serialize = options.serialize;
       }</pre></div></div>
             
         </li>
@@ -565,21 +577,14 @@ layout.options.foo
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Serialize can be overridden via the options</p>
-<pre><code><span class="hljs-keyword">var</span> layout = <span class="hljs-keyword">new</span> BackboneLayout({
-  serialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    <span class="hljs-keyword">return</span> {<span class="hljs-string">'foo'</span>: <span class="hljs-string">'bar'</span>};
-  }
-});
+              <p>Restore pre Backbone 1.1.0 <code>this.options</code> functionality</p>
 
-layout.serialize();
-&gt;&gt; {<span class="hljs-string">'foo'</span>: <span class="hljs-string">'bar'</span>}
-</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (options.serialize) {
-        <span class="hljs-keyword">this</span>.serialize = options.serialize;
-      }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.options = options;
+
+      Backbone.View.prototype.constructor.call(<span class="keyword">this</span>, options);
+    }</pre></div></div>
             
         </li>
         
@@ -590,14 +595,27 @@ layout.serialize();
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>Restore pre Backbone 1.1.0 <code>this.options</code> functionality</p>
+              <h2 id="initialize">initialize</h2>
+<p>When initializing a <code>BackboneLayout</code> it is good practice to define
+any nested views so that they can be rendered as soon as this view
+is rendered.</p>
+<p>Example:</p>
+<pre><code>var MyLayout = BackboneLayout.extend({
+  initialize: function(options) {
+    BackboneLayout.prototype.initialize.call(this, options);
+
+    this.registerView(new NestedView(), {
+      anchor: &#39;.nested-view&#39;
+      , replace: true
+    });
+  }
+});</code></pre>
+<p>See <code>ViewManager</code> and <code>BackboneLayout.render</code> for more details on
+how nested views are rendered.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.options = options;
-
-      Backbone.View.prototype.constructor.call(<span class="hljs-keyword">this</span>, options);
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    , initialize: <span class="function"><span class="keyword">function</span><span class="params">(options)</span> {</span></pre></div></div>
             
         </li>
         
@@ -608,27 +626,19 @@ layout.serialize();
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <h2 id="initialize">initialize</h2>
-<p>When initializing a <code>BackboneLayout</code> it is good practice to define
-any nested views so that they can be rendered as soon as this view
-is rendered.</p>
-<p>Example:</p>
-<pre><code><span class="hljs-keyword">var</span> MyLayout = BackboneLayout.extend({
-  initialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
-    BackboneLayout.prototype.initialize.call(<span class="hljs-keyword">this</span>, options);
-
-    <span class="hljs-keyword">this</span>.registerView(<span class="hljs-keyword">new</span> NestedView(), {
-      anchor: <span class="hljs-string">'.nested-view'</span>
-      , replace: <span class="hljs-literal">true</span>
-    });
-  }
-});
-</code></pre><p>See <code>ViewManager</code> and <code>BackboneLayout.render</code> for more details on
-how nested views are rendered.</p>
+              <p>Bubble up anything the view manager triggers</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    , initialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.viewManager, <span class="string">'all'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+        <span class="keyword">this</span>.trigger.apply(<span class="keyword">this</span>, arguments);
+      }, <span class="keyword">this</span>);
+
+      <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.viewManager, <span class="string">'remove'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      }, <span class="keyword">this</span>);
+
+      Backbone.View.prototype.initialize.call(<span class="keyword">this</span>, options);
+    }</pre></div></div>
             
         </li>
         
@@ -639,18 +649,17 @@ how nested views are rendered.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>Bubble up anything the view manager triggers</p>
+              <h2 id="registerview">registerView</h2>
+<p>Register a view with the <code>ViewManager</code>. This will specify an
+explicit parent-child relationship between this view and the view
+added.</p>
+<p>See <code>ViewManager.register</code> for more information.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.listenTo(<span class="hljs-keyword">this</span>.viewManager, <span class="hljs-string">'all'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-        <span class="hljs-keyword">this</span>.trigger.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-      }, <span class="hljs-keyword">this</span>);
-
-      <span class="hljs-keyword">this</span>.listenTo(<span class="hljs-keyword">this</span>.viewManager, <span class="hljs-string">'remove'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      }, <span class="hljs-keyword">this</span>);
-
-      Backbone.View.prototype.initialize.call(<span class="hljs-keyword">this</span>, options);
+            <div class="content"><div class='highlight'><pre>    , registerView: <span class="function"><span class="keyword">function</span><span class="params">(view, options)</span> {</span>
+      options || (options = {});
+      <span class="keyword">this</span>.viewManager.register(view, options);
     }</pre></div></div>
             
         </li>
@@ -662,17 +671,13 @@ how nested views are rendered.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <h2 id="registerview">registerView</h2>
-<p>Register a view with the <code>ViewManager</code>. This will specify an
-explicit parent-child relationship between this view and the view
-added.</p>
-<p>See <code>ViewManager.register</code> for more information.</p>
+              <h2 id="unregisterview">unRegisterView</h2>
+<p>Unregisters the view with the <code>ViewManager</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    , registerView: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(view, options)</span> {</span>
-      options || (options = {});
-      <span class="hljs-keyword">this</span>.viewManager.register(view, options);
+            <div class="content"><div class='highlight'><pre>    , unRegisterView: <span class="function"><span class="keyword">function</span><span class="params">(view)</span> {</span>
+      <span class="keyword">this</span>.viewManager.unRegister(view);
     }</pre></div></div>
             
         </li>
@@ -684,13 +689,14 @@ added.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <h2 id="unregisterview">unRegisterView</h2>
-<p>Unregisters the view with the <code>ViewManager</code>.</p>
+              <h2 id="getviewbyname">getViewByName</h2>
+<p>Return the view associated with the given name.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    , unRegisterView: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(view)</span> {</span>
-      <span class="hljs-keyword">this</span>.viewManager.unRegister(view);
+            <div class="content"><div class='highlight'><pre>    , getViewByName: <span class="function"><span class="keyword">function</span><span class="params">(name)</span> {</span>
+      <span class="keyword">var</span> mView = <span class="keyword">this</span>.viewManager.getViewByName(name);
+      <span class="keyword">return</span> mView ? mView.view : <span class="literal">undefined</span>;
     }</pre></div></div>
             
         </li>
@@ -701,25 +707,6 @@ added.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <h2 id="getviewbyname">getViewByName</h2>
-<p>Return the view associated with the given name.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    , getViewByName: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
-      <span class="hljs-keyword">var</span> mView = <span class="hljs-keyword">this</span>.viewManager.getViewByName(name);
-      <span class="hljs-keyword">return</span> mView ? mView.view : <span class="hljs-literal">undefined</span>;
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h2 id="render">render</h2>
 <p>Render this view and all child views registered with thie view
@@ -732,38 +719,38 @@ manager.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    , render: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">this</span>.beforeRender &amp;&amp; <span class="hljs-keyword">this</span>.beforeRender();
+            <div class="content"><div class='highlight'><pre>    , render: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">this</span>.beforeRender &amp;&amp; <span class="keyword">this</span>.beforeRender();
 
-      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.template) {
-        <span class="hljs-keyword">this</span>.$el.empty().append(<span class="hljs-keyword">this</span>.template(<span class="hljs-keyword">this</span>.serialize()));
+      <span class="keyword">if</span> (<span class="keyword">this</span>.template) {
+        <span class="keyword">this</span>.$el.empty().append(<span class="keyword">this</span>.template(<span class="keyword">this</span>.serialize()));
       }
 
-      <span class="hljs-keyword">this</span>.viewManager.each(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(managed, index, list)</span> {</span>
-        <span class="hljs-keyword">var</span> view = managed.view;
+      <span class="keyword">this</span>.viewManager.each(<span class="function"><span class="keyword">function</span><span class="params">(managed, index, list)</span> {</span>
+        <span class="keyword">var</span> view = managed.view;
         view.render();
-        <span class="hljs-keyword">if</span> (managed.anchor) {
-          <span class="hljs-keyword">var</span> anchor = $(managed.anchor, <span class="hljs-keyword">this</span>.el);
-          <span class="hljs-keyword">if</span> (managed.replace) {
+        <span class="keyword">if</span> (managed.anchor) {
+          <span class="keyword">var</span> anchor = $(managed.anchor, <span class="keyword">this</span>.el);
+          <span class="keyword">if</span> (managed.replace) {
             anchor.replaceWith(view.el);
-          } <span class="hljs-keyword">else</span> {
+          } <span class="keyword">else</span> {
             anchor.html(view.el);
           }
         }
-      }, <span class="hljs-keyword">this</span>);
+      }, <span class="keyword">this</span>);
 
-      <span class="hljs-keyword">this</span>.afterRender &amp;&amp; <span class="hljs-keyword">this</span>.afterRender();
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+      <span class="keyword">this</span>.afterRender &amp;&amp; <span class="keyword">this</span>.afterRender();
+      <span class="keyword">return</span> <span class="keyword">this</span>;
     }</pre></div></div>
             
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h2 id="close">close</h2>
 <p>Before closing this view, close all the child views. This prevents
@@ -774,7 +761,24 @@ from the <code>Layout</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    , close: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    , close: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>First, make sure that each and every child view has been closed and
+un-registered.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.viewManager.each(<span class="function"><span class="keyword">function</span><span class="params">(managed, index, list)</span> {</span>
+        <span class="keyword">var</span> view = managed.view;</pre></div></div>
             
         </li>
         
@@ -785,13 +789,11 @@ from the <code>Layout</code>.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>First, make sure that each and every child view has been closed and
-un-registered.</p>
+              <p>Call <code>close</code> on the view (if it has a <code>close</code> method)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.viewManager.each(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(managed, index, list)</span> {</span>
-        <span class="hljs-keyword">var</span> view = managed.view;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        view.close &amp;&amp; view.close();</pre></div></div>
             
         </li>
         
@@ -802,11 +804,12 @@ un-registered.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>Call <code>close</code> on the view (if it has a <code>close</code> method)</p>
+              <p>Unregister this child view</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        view.close &amp;&amp; view.close();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.unRegisterView(view);
+      }, <span class="keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -817,12 +820,12 @@ un-registered.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>Unregister this child view</p>
+              <p>Other objects can listen for this close event and respond
+appropriately.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.unRegisterView(view);
-      }, <span class="hljs-keyword">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.trigger(<span class="string">'close'</span>, <span class="keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -833,12 +836,13 @@ un-registered.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>Other objects can listen for this close event and respond
-appropriately.</p>
+              <p>Super-duper make sure that this view is not bound to anything.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">'close'</span>, <span class="hljs-keyword">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.unbind();
+      <span class="keyword">this</span>.stopListening();
+      <span class="keyword">this</span>.remove();</pre></div></div>
             
         </li>
         
@@ -849,13 +853,14 @@ appropriately.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>Super-duper make sure that this view is not bound to anything.</p>
+              <p>Do any post-close work</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.unbind();
-      <span class="hljs-keyword">this</span>.stopListening();
-      <span class="hljs-keyword">this</span>.remove();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.onClose &amp;&amp; <span class="keyword">this</span>.onClose();
+
+      <span class="keyword">return</span> <span class="keyword">this</span>;
+    }</pre></div></div>
             
         </li>
         
@@ -866,24 +871,6 @@ appropriately.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Do any post-close work</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.onClose &amp;&amp; <span class="hljs-keyword">this</span>.onClose();
-
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
               <h2 id="serialize">serialize</h2>
 <p>Returns an object of data. This becomes the template context object.
 It is common practice to re-define this method as needed.</p>
@@ -892,12 +879,12 @@ It is common practice to re-define this method as needed.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    , serialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.model ? <span class="hljs-keyword">this</span>.model.toJSON() : {};
+            <div class="content"><div class='highlight'><pre>    , serialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">return</span> <span class="keyword">this</span>.model ? <span class="keyword">this</span>.model.toJSON() : {};
     }
   });
 
-  <span class="hljs-keyword">return</span> BackboneLayout;
+  <span class="keyword">return</span> BackboneLayout;
 }));</pre></div></div>
             
         </li>
