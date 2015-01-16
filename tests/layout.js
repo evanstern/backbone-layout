@@ -202,6 +202,14 @@
       expect(mView.name).toBe('my-view');
     });
 
+    describe('#getViewsByModel', function() {
+      it('should return [] when no model is passed', function() {
+        layout.registerView(myView);
+        var views = layout.viewManager.getViewsByModel(undefined);
+        expect(views.length).toBe(0);
+      });
+    });
+
     describe('#unRegister', function() {
       it('removes the managed view from `views`', function() {
         layout.registerView(myView);
