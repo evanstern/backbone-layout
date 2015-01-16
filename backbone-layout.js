@@ -173,7 +173,7 @@
     //
     // Get the managed views that are associated with a specific model.
     this.getViewsByModel = function(model) {
-      var views = this._viewsByModel[model.cid];
+      var views = model && this._viewsByModel[model.cid];
       return views && views.length ? _.map(views, function(mView) {
         return mView.view;
       }): [];
