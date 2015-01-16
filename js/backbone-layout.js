@@ -1,4 +1,4 @@
-// Backbone-Layout.js 1.2.3
+// Backbone-Layout.js 1.2.4
 
 // (c) 2013 Evan Stern
 // Backbone-Layout may be freely distributed under the MIT license.
