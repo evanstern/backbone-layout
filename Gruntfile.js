@@ -48,7 +48,7 @@ module.exports = function(grunt) {
                 , options: {
                     specs: "tests/*js"
                     , vendor: [
-                        "bower_components/jquery/jquery.js"
+                        "bower_components/jquery/dist/jquery.js"
                         , "bower_components/underscore/underscore.js"
                         , "bower_components/backbone/backbone.js"
                     ]
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
                             , paths: {
                                 "backbone": "../bower_components/backbone/backbone"
                                 , "underscore": "../bower_components/underscore/underscore"
-                                , "jquery": "../bower_components/jquery/jquery"
+                                , "jquery": "../bower_components/jquery/dist/jquery"
                             }
                             , shim: {
                                 backbone: {
