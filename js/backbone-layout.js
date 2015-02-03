@@ -335,14 +335,19 @@
 
     // ##render
     //
-    // Render this view and all child views registered with thie view
+    // Render this view and all child views registered with this view
     // manager.
+    //
+    // Child views that have been registered without an anchor point will
+    // *NOT* be rendered. They will need to be rendered "by hand" later. The
+    // suggested place for this to happen is in the `afterRender` method.
     //
     // The order of operations is:
     //
     // 1) Call `beforeRender`
     // 2) Add this view to the DOM (if we can)
-    // 3) Recurse through all nested views and render them
+    // 3) Recurse through all nested views and render them (if they have an
+    //    anchor point)
     // 4) Call `afterRender`
     //
     , render: function() {
@@ -354,8 +359,8 @@
 
       this.viewManager.each(function(managed, index, list) {
         var view = managed.view;
-        view.render();
         if (managed.anchor) {
+          view.render();
           var anchor = $(managed.anchor, this.el);
           if (managed.replace) {
             anchor.replaceWith(view.el);

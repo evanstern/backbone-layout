@@ -330,9 +330,15 @@
       layout = new Layout();
     });
 
-    it('calls render on its children', function() {
+    it('does not call render on un-anchored children', function() {
       layout.registerView(view1);
-      layout.registerView(view2);
+      layout.render();
+      expect(renderCallback.calls.length).toEqual(0);
+    });
+
+    it('calls render on its children', function() {
+      layout.registerView(view1, {anchor: '.foo'});
+      layout.registerView(view2, {anchor: '.foo'});
       layout.render();
       expect(renderCallback.calls.length).toEqual(2);
     });
